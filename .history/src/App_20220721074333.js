@@ -1,7 +1,5 @@
 import './App.css';
 
-// IMPORT MAP
-import Map from './components/Map';
 
 
 function App() {
@@ -12,7 +10,7 @@ function App() {
 
         {/* CONTROLS (ON TOP LEFT CORNER) */}
 
-        <Map />
+        
     </div>
   );
 }

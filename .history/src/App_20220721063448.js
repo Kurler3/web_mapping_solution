@@ -1,18 +1,14 @@
 import './App.css';
 
-// IMPORT MAP
-import Map from './components/Map';
-
-
 function App() {
 
+
+  // USE useEffect TO INITIALIZE THE MAP
+  
 
   return (
     <div className="App">
 
-        {/* CONTROLS (ON TOP LEFT CORNER) */}
-
-        <Map />
     </div>
   );
 }

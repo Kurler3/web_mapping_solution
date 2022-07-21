@@ -27,17 +27,14 @@
     <title>Mapping Solution</title>
 
     <!-- LEAFLET CSS -->
-    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
     integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
-    crossorigin=""/> -->
+    crossorigin=""/>
 
     <!-- LEAFLET JS-->
-    <!-- <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
     integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
-    crossorigin=""></script> -->
-
-    <script src="https://unpkg.com/maplibre-gl@2.1.9/dist/maplibre-gl.js"></script>
-    <link href="https://unpkg.com/maplibre-gl@2.1.9/dist/maplibre-gl.css" rel="stylesheet" />
+    crossorigin=""></script>
 
 
   </head>
@@ -55,14 +52,14 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 
+    <!-- MAP -->
+    <div id="map"></div>
     
-    <!-- <div id="map"></div>
-    
-   
+    <!-- INIT LEAFLET SCRIPT -->
     <script>
 
       // GET MAP DIV AND SET THE INITIAL VIEW TO LONDON
-      let map = L.map('map').setView([48, 11], 13);
+      let map = L.map('map').setView([51.505, -0.09], 13);
 
       // ADD TILE LAYER (WHERE TO GET THE IMAGE FROM AND OTHER OPTIONS)
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -70,14 +67,13 @@
           attribution: '© OpenStreetMap'
       }).addTo(map);
 
-
       // NEED TO USE THIS BECAUSE MAP WAS ONLY RENDERING A PART OF THE IT'S HEIGHT EACH TIME IT RELOADED
       //Using setInterval can help the reloading or refreshing of the map itself.
       setInterval(function() {
         map.invalidateSize();
       }, 1);
 
-    </script> -->
+    </script>
 
   </body>
 </html>

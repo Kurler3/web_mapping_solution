@@ -12,7 +12,7 @@ function App() {
 
         {/* CONTROLS (ON TOP LEFT CORNER) */}
 
-        <Map />
+        
     </div>
   );
 }

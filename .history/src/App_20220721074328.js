@@ -1,7 +1,7 @@
+import {memo, useEffect, useRef} from 'react';
 import './App.css';
-
-// IMPORT MAP
-import Map from './components/Map';
+import { addMarker } from './leaflet/leaflet_functions';
+import mockResponse from './response.json';
 
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
 
         {/* CONTROLS (ON TOP LEFT CORNER) */}
 
-        <Map />
+        
     </div>
   );
 }
