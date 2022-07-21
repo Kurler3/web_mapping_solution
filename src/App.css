@@ -5,25 +5,63 @@
   --border-gray: #b5b5b5;
   /* BLUE BACKGROUND */
   --blue-bg: #3492eb;
+  /* ON HOVER ICON BTN BG */
+  --hover-icon-btn-bg: #ebebeb;
+
+  /* COMMON BOX SHADOW */
+  --common-box-shadow: 2px 2px 4px 0px rgba(0, 0, 0,0.3);
+
+  /* COMMON TRANSITION */
+  --common-transition: 0.2s all ease;
+
 }
 
 body {
   padding: 0px;
   margin: 0px;
   font-family: 'Fredoka', sans-serif;
+  overflow: hidden;
 }
 
 /* ALL KEYFRAMES */
+
+/* BOUNCE ANIMATION */
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 
-  40% {transform: translateY(-20px);} 
-  60% {transform: translateY(-15px);} 
+  40% {transform: translateY(-15px);} 
+  60% {transform: translateY(-10px);} 
 } 
+
+/* SLIDE FROM LEFT ANIMATION */
+@keyframes slideFromLeft {
+  0% {
+    margin-left: -20vw;
+    opacity: 0;
+  }
+
+  100% {
+    margin-left: 0px;
+    opacity: 1;
+  }
+}
+
+/* ------------------ */
 
 /* COMMON CSS */
 .flexCenterCenter {
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+.flexBetweenCenter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flexColStartCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -59,6 +97,21 @@ body {
   z-index: 100;
   padding: 10px;
 }
+
+/* OPEN CONTROLS CONTAINER */
+.openControlsContainer {
+  background: white;
+  min-width: 20vw;
+  height: 100vh;
+  box-shadow: 4px 0px 4px 0px rgba(0, 0, 0,0.3);
+
+  /* SLIDE FROM LEFT ANIMATION */
+  animation-name: slideFromLeft;
+  animation-timing-function: ease;
+  animation-duration: 200ms;
+  animation-iteration-count: 1;
+}
+
 .startChooseBtn {
   width: 300px;
   padding: 10px;
@@ -69,7 +122,7 @@ body {
   cursor: pointer;
   position: relative;
   background: var(--blue-bg);
-  transition: all 0.2s ease;
+  transition: var(--common-transition);
   margin: 20px 10px;
 
   /* BOUNCING ANIMATION */
@@ -90,4 +143,39 @@ body {
   position: absolute;
   left: 0;
   padding: 10px;
+}
+
+
+/* OPEN CONTROLS CONTENT CONTAINER */
+.openControlsContentContainer {
+  width: 100%;
+}
+
+.openControlsContentTransportBtn{
+  margin: 0px 5px;
+  border-radius: 20px;
+  transition: var(--common-transition);
+  padding: 5px;
+  cursor: pointer;
+  border: none;
+  color: #363636;
+  background: transparent;
+}
+.openControlsContentTransportBtn:hover {
+  background: #e8e8e8;
+}
+.openControlsHeaders {
+  width: 100%;
+  padding: 0px 10px;
+}
+.openControlsHeaderCloseBtn {
+  border: none;
+  border-radius: 8px;
+  padding: 5px;
+  background: none;
+  cursor: pointer;
+  transition: var(--common-transition);
+}
+.openControlsHeaderCloseBtn:hover {
+  background: var(--hover-icon-btn-bg);
 }

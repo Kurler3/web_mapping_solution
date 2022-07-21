@@ -17,7 +17,13 @@ const App = () => {
     <div className="App">
 
         {/* CONTROLS (ON TOP LEFT CORNER) */}
-        <Controls />
+        <Controls 
+          isChoosing={state.isChoosing}
+          transportChosen={state.transportChosen}
+          startCords={state.startCords}
+          endCords={state.endCords}
+          appDispatcher={appDispatcher}
+        />
 
         {/* MAP LIBRE MAP */}
         <Map 
@@ -26,6 +32,8 @@ const App = () => {
           endCords={state.endCords}
           zoom={state.zoom}
           currentStep={state.currentStep}
+         
+          isChoosing={state.isChoosing}
           appDispatcher={appDispatcher}
         />
 
