@@ -1,12 +1,38 @@
 
+/* DEFINING GLOBAL VARIABLES */
+* {
+  /* GRAY BORDER */
+  --border-gray: #b5b5b5;
+  /* BLUE BACKGROUND */
+  --blue-bg: #3492eb;
+}
+
+body {
+  padding: 0px;
+  margin: 0px;
+  font-family: 'Fredoka', sans-serif;
+}
+
+/* ALL KEYFRAMES */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 
+  40% {transform: translateY(-20px);} 
+  60% {transform: translateY(-15px);} 
+} 
+
+/* COMMON CSS */
+.flexCenterCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* APP */
-/* .App {
+.App {
   position: relative;
   height: 100vh;
   width: 100vw;
-  background-color: transparent;
-  z-index: -1;
-} */
+}
 
 
 /* MAP CONTAINER */
@@ -19,6 +45,49 @@
 /* MAP */
 .map {
   position: absolute;
-  width: 100%;
+  top: 0;
+  left: 0;
   height: 100%;
+  width: 100%;
+}
+
+/* CONTROLS CONTAINER */
+.controlsContainer {
+  top: 0px;
+  left: 0px;
+  position: absolute;
+  z-index: 100;
+  padding: 10px;
+}
+.startChooseBtn {
+  width: 300px;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  background: var(--blue-bg);
+  transition: all 0.2s ease;
+  margin: 20px 10px;
+
+  /* BOUNCING ANIMATION */
+  animation-name: bounce;
+  animation-duration: 2000ms;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+}
+.startChooseBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0,0.3);
+  color: var(--blue-bg);
+  background: white;
+  border: 1px solid var(--blue-bg);
+  animation-name: none;
+}
+.startChooseBtnIcon {
+  position: absolute;
+  left: 0;
+  padding: 10px;
 }

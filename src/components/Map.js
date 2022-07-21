@@ -1,14 +1,27 @@
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
 import maplibregl from 'maplibre-gl';
 import mockResponse from '../response.json';
-import { CLICK_MAP_STEP, EMPTY_MAP_SOURCE } from '../utils/constants';
+import { APP_ACTION_TYPES, CLICK_MAP_STEP, EMPTY_MAP_SOURCE } from '../utils/constants';
 
 // ArcGIS ROUTE SERVICE
 import { ApiKeyManager } from "@esri/arcgis-rest-request";
 import { solveRoute } from '@esri/arcgis-rest-routing';
 
 // COMPONENT
-const Map = () => {
+const Map = ({
+  // LOADING
+  loading,
+  // START CORDS
+  startCords,
+  // END CORDS
+  endCords,
+  // ZOOM
+  zoom,
+  // CURRENT STEP
+  currentStep,
+  // APP DISPATCHER,
+  appDispatcher,
+}) => {
 
     // MAP CONTAINER REF
     const mapContainer = useRef(null);
@@ -17,14 +30,14 @@ const Map = () => {
     const map = useRef(null);
 
    
-    // START CORDS, END CORDS AND ZOOM 
-    const [state, setState] = useState({
-        startCords: [mockResponse.waypoints[1].location[0], mockResponse.waypoints[1].location[1]],
-        endCords: null,
-        zoom: 13,
-        currentStep: CLICK_MAP_STEP.start,
-        loading: false,
-    });
+    // // START CORDS, END CORDS AND ZOOM 
+    // const [state, setState] = useState({
+    //     startCords: [mockResponse.waypoints[1].location[0], mockResponse.waypoints[1].location[1]],
+    //     endCords: null,
+    //     zoom: 13,
+    //     currentStep: CLICK_MAP_STEP.start,
+    //     loading: false,
+    // });
 
     // ADD CIRCLE LAYERS FUNCTION
     const addCircleLayers = () => {
@@ -43,30 +56,38 @@ const Map = () => {
 
         // START CIRCLE VISUAL DATA REPRESENTATION OF COORDINATES IN MAP
         // LISTENS DIRECTLY TO CHANGES IN END SOURCE
-        map.current.addLayer({
-          id: "start-circle",
-          type: "circle",
-          source: "start",
-          paint: {
-            "circle-radius": 6,
-            "circle-color": "white",
-            "circle-stroke-color": "black",
-            "circle-stroke-width": 2
-          },
-        });
+        map.current.addLayer(
+          {
+            id: "start-circle",
+            type: "circle",
+            source: "start",
+            layout: {
+              visibility: 'visible',
+            },
+            paint: {
+              "circle-radius": 6,
+              "circle-color": "white",
+              "circle-stroke-color": "black",
+              "circle-stroke-width": 2
+            },
+          }
+        );
 
         // END CIRCLE (WILL SWITCH TO ICON) DATA REPRESENTATION OF COORDINATES IN MAP
         // LISTENS DIRECTLY TO CHANGES IN END SOURCE
-        map.current.addLayer({
-          id: "end-circle",
-          type: "circle",
-          source: "end",
-          paint: {
-            "circle-radius": 7,
-            "circle-color": "red"
+        map.current.addLayer(
+          {
+            id: "end-circle",
+            type: "circle",
+            source: "end",
+            paint: {
+              "circle-radius": 7,
+              "circle-color": "red",
+            },
           }
-        });
+        );
 
+      
       }
 
     // ADD ROUTE LAYERS FUNCTION (WILL BE THE LINE FROM SOURCE TO DESTINATION)
@@ -92,8 +113,6 @@ const Map = () => {
 
     }, []);
 
-    console.log("State", state.startCords, state.endCords);
-
     // UPDATE ROUTE FUNCTION 
     const updateRoute = useCallback(async (startCords, endCords) => {
 
@@ -110,6 +129,9 @@ const Map = () => {
           endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
           authentication: auth,
         });
+
+        // SET ROUTE SOURCE
+        map.current.getSource("route").setData(response.routes.geoJson);
 
         console.log("Response: ", response);
 
@@ -132,36 +154,38 @@ const Map = () => {
         coordinates
       };
 
-      console.log("CurrentStep: ", state.currentStep);
-
-
-      if (state.currentStep === CLICK_MAP_STEP.start) {
+      if (
+        currentStep === CLICK_MAP_STEP.start
+        ) {
           
           // SET NEW COORDINATES TO MAP SOURCE WITH "start" ID.
           map.current.getSource("start").setData(point);
           
           // SET END AND ROUTE SOURCES BACK TO DEFAULT EMPTY MAP SOURCE OBJECT
-          map.current.getSource("end").setData(EMPTY_MAP_SOURCE);
+          // map.current.getSource("end").setData(EMPTY_MAP_SOURCE);
           map.current.getSource("route").setData(EMPTY_MAP_SOURCE);
-
-          // SET NEW STATE (UPDATE START CORDINATES, SET END CORDINATES TO NULL AND UPDATE CLICK STEP)
-          setState((prevState) => {
-            return {
-              ...prevState,
+          map.current.getSource("end").setData(EMPTY_MAP_SOURCE);
+          
+          // UPDATE APP STATE
+          // UPDATE START CORDS, SET END CORDS TO NULL AND UPDATE CLICK STEP
+          appDispatcher({
+            type: APP_ACTION_TYPES.setMultiple,
+            object: {
               startCords: coordinates,
               endCords: null,
               currentStep: CLICK_MAP_STEP.end,
-            };
+            },
           });
-
+          
       } else {
           // SET MAP END SOURCE TO NEW POINT
           map.current.getSource("end").setData(point);
-          
-          // SET NEW STATE (UPDATE END CORDINATES AND SET CURRENT STEP TO START)
-          setState((prevState) => {
-            return {
-              ...prevState,
+
+          // UPDATE APP STATE
+          // SET NEW END CORDS AND SET CURRENT STEP BACK TO START
+          appDispatcher({
+            type: APP_ACTION_TYPES.setMultiple,
+            object: {
               endCords: coordinates,
               currentStep: CLICK_MAP_STEP.start,
             }
@@ -170,19 +194,12 @@ const Map = () => {
         }
 
         // IF BOTH START AND END COORDINATES ARE FILLED, THEN SEARCH BEST PATH 
-        if(state.currentStep===CLICK_MAP_STEP.end && coordinates) {
-          
-          updateRoute(state.startCords, coordinates);
+        if(currentStep===CLICK_MAP_STEP.end && coordinates) {          
+          updateRoute(startCords, coordinates);
         }
 
-        
-    }, [state.currentStep, state.startCords, updateRoute]);
+    }, [appDispatcher, currentStep, startCords, updateRoute]);
     
-    if(map.current) {
-      console.log("Map: ", map.current.getSource("start")._data);
-    }
-    
-
     // INITIALIZE THE MAP
     useEffect(() => {
 
@@ -192,8 +209,8 @@ const Map = () => {
           map.current = new maplibregl.Map({
             container: mapContainer.current,
             style: 'https://api.maptiler.com/maps/openstreetmap/style.json?key=ujWcTLhowBbZJMS266dY#0.7/22.80535/2.86559',
-            center: state.startCords,
-            zoom: state.zoom,
+            center: [mockResponse.waypoints[1].location[0], mockResponse.waypoints[1].location[1]],
+            zoom: zoom,
           });
 
           // WAIT FOR LOAD OF MAP TO BE DONE, THEN ADD LAYERS
@@ -208,10 +225,9 @@ const Map = () => {
         // LISTEN TO ON CLICK EVENT
         map.current.on("click", onClickMap);
 
-    }, [addRouteLayers, onClickMap, state.latitude, state.longitude, state.startCords, state.zoom, state.currentStep]);
+    }, [addRouteLayers, onClickMap, zoom]);
 
     
-
     return (
         <div className='mapWrap'>
             <div ref={mapContainer} className="map"></div>

@@ -9,3 +9,9 @@ export const EMPTY_MAP_SOURCE = {
     type: "FeatureCollection",
     features: [],
 }
+
+// APP ACTION TYPES
+export const APP_ACTION_TYPES = {
+    setKey: "SET_KEY",
+    setMultiple: "SET_MULTIPLE",
+}

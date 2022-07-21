@@ -11,6 +11,9 @@
 # production
 /build
 
+# IGNORE HISTORY
+/.history/*
+
 # misc
 .DS_Store
 .env.local
