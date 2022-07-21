@@ -90,22 +90,22 @@ const Map = () => {
 
     }, []);
 
-    console.log("State", state.startCords, state.endCords);
+
     // UPDATE ROUTE FUNCTION 
-    const updateRoute = useCallback(async (startCords, endCords) => {
+    const updateRoute = useCallback(async () => {
 
       // SET LOADING
 
       // AUTH FOR ArcGIS REST API
       let auth = ApiKeyManager.fromKey('AAPK65f73d9f93544540bed1ec91bce6bfb23iSWU4RgwFb79XWl9vAWtF6_R5vjmPhCtMzlrwvxFoCF4MwnK3cJ0WYirUHLnuXB');
-      
+
       try {
-        
+
         // GET BEST PATH
         let response = await solveRoute({
-          stops: [startCords, endCords],
+          stops: [state.startCords, state.endCords],
           endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
-          authentication: auth,
+          auth,
         });
 
         console.log("Response: ", response);
@@ -116,7 +116,10 @@ const Map = () => {
         // SET ERROR IN STATE TO SHOW USER AND RESET ALL DATA
       }
 
-    }, []);
+    }, [state.endCords, state.startCords]);
+
+
+    console.log("State: ", state.currentStep);
 
     // ON CLICK MAP EVENT HANDLER
     const onClickMap = useCallback((e) => {
@@ -151,10 +154,10 @@ const Map = () => {
             };
           });
 
-      } else {
+        } else {
           // SET MAP END SOURCE TO NEW POINT
           map.current.getSource("end").setData(point);
-          
+
           // SET NEW STATE (UPDATE END CORDINATES AND SET CURRENT STEP TO START)
           setState((prevState) => {
             return {
@@ -165,46 +168,34 @@ const Map = () => {
           });
 
         }
-
-        // IF BOTH START AND END COORDINATES ARE FILLED, THEN SEARCH BEST PATH 
-        if(state.currentStep===CLICK_MAP_STEP.end && coordinates) {
-          
-          updateRoute(state.startCords, coordinates);
-        }
-
-        
-    }, [state.currentStep, state.startCords, updateRoute]);
-    
-
-
+    }, [state.currentStep]);
+  
     // INITIALIZE THE MAP
     useEffect(() => {
 
         // IF MAP EXISTS, THEN JUST RETURN
-        if(!map.current) {
-           // ELSE INITIALIZE MAP
-          map.current = new maplibregl.Map({
+        if(map.current) return;
+
+        // ELSE INITIALIZE MAP
+        map.current = new maplibregl.Map({
             container: mapContainer.current,
             style: 'https://api.maptiler.com/maps/openstreetmap/style.json?key=ujWcTLhowBbZJMS266dY#0.7/22.80535/2.86559',
             center: state.startCords,
             zoom: state.zoom,
-          });
+        });
 
-          // WAIT FOR LOAD OF MAP TO BE DONE, THEN ADD LAYERS
-          map.current.on("load", () => {
-            // ADD SOURCE AND DESTINATION POINT REPRESENTATION 
-            addCircleLayers();
-            // ADD ROUTE LINE REPRESENTATION
-            addRouteLayers();
-          });
-        }
+        // WAIT FOR LOAD OF MAP TO BE DONE, THEN ADD LAYERS
+        map.current.on("load", () => {
+          // ADD SOURCE AND DESTINATION POINT REPRESENTATION 
+          addCircleLayers();
+          // ADD ROUTE LINE REPRESENTATION
+          addRouteLayers();
+        });
 
         // LISTEN TO ON CLICK EVENT
         map.current.on("click", onClickMap);
 
     }, [addRouteLayers, onClickMap, state.latitude, state.longitude, state.startCords, state.zoom, state.currentStep]);
-
-    
 
     return (
         <div className='mapWrap'>

@@ -97,7 +97,7 @@ const Map = () => {
       // SET LOADING
 
       // AUTH FOR ArcGIS REST API
-      let auth = ApiKeyManager.fromKey('AAPK65f73d9f93544540bed1ec91bce6bfb23iSWU4RgwFb79XWl9vAWtF6_R5vjmPhCtMzlrwvxFoCF4MwnK3cJ0WYirUHLnuXB');
+      let auth = ApiKeyManager.fromKey('VkLvkrUJUkdSCf2WacAKotafN5ybvHJouwrRIFErTbQDZcoc79xkm6VPaKMa6lu4LxE4VHDm6KBsLYfTWwDHJeg0QDHmEWDxjBkXjq8jyhT-H-Ukamst0cCPR0Sblid4XHLDHPd2Myp6xZ5et2Jc0w..');
       
       try {
         

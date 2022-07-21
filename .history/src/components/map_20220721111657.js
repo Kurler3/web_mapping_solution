@@ -98,14 +98,14 @@ const Map = () => {
 
       // AUTH FOR ArcGIS REST API
       let auth = ApiKeyManager.fromKey('AAPK65f73d9f93544540bed1ec91bce6bfb23iSWU4RgwFb79XWl9vAWtF6_R5vjmPhCtMzlrwvxFoCF4MwnK3cJ0WYirUHLnuXB');
-      
+
       try {
         
         // GET BEST PATH
         let response = await solveRoute({
           stops: [startCords, endCords],
           endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
-          authentication: auth,
+          auth,
         });
 
         console.log("Response: ", response);
