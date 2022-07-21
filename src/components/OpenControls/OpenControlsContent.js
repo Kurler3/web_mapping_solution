@@ -1,6 +1,7 @@
 import {memo, useCallback} from 'react';
 import { APP_ACTION_TYPES } from '../../utils/constants';
 import OpenControlsBody from './OpenControlsBody';
+import OpenControlsDirections from './OpenControlsDirections';
 import OpenControlsHeaders from './OpenControlsHeaders';
 
 const OpenControlsContainer = ({
@@ -18,6 +19,10 @@ const OpenControlsContainer = ({
     handleResetStartEndMapData,
     // HANDLE SWITCH START/END MAP DATA
     handleSwitchMapData,
+    // CALCULATED ROUTE
+    calculatedRoute,
+    // LOADING
+    loading,
 }) => {
 
 
@@ -67,7 +72,12 @@ const OpenControlsContainer = ({
             />
 
             {/* DIRECTIONS CONTAINER */}
-            
+            <OpenControlsDirections 
+                startCords={startCords}
+                endCords={endCords}
+                calculatedRoute={calculatedRoute}
+                loading={loading}
+            />
 
         </div>
     );

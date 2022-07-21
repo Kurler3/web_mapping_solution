@@ -178,6 +178,7 @@ const Map = ({
               endCords: null,
               currentStep: CLICK_MAP_STEP.end,
               isChoosing: true,
+              calculatedRoute: null,
             },
           });
           
@@ -193,6 +194,7 @@ const Map = ({
               endCords: coordinates,
               currentStep: CLICK_MAP_STEP.start,
               isChoosing: true,
+              calculatedRoute: null,
             }
           });
 

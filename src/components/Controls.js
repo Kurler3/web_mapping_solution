@@ -20,6 +20,10 @@ const Controls = ({
     handleResetStartEndMapData,
     // HANDLE SWITCH START/END MAP DATA
     handleSwitchMapData,
+    // CALCULATED ROUTE
+    calculatedRoute,
+    // LOADING
+    loading,
 }) => {
 
 
@@ -35,7 +39,7 @@ const Controls = ({
 
     return (
         <div 
-            className={`controlsContainer ${isChoosing ? "openControlsContainer" : ""}`}
+            className={`controlsContainer ${isChoosing ? "openControlsContainer flexColStartCenter" : ""}`}
         >
             
             {/* CLICK TO OPEN BTN */}
@@ -63,6 +67,8 @@ const Controls = ({
                     handleResetMapData={handleResetMapData}
                     handleResetStartEndMapData={handleResetStartEndMapData}
                     handleSwitchMapData={handleSwitchMapData}
+                    calculatedRoute={calculatedRoute}
+                    loading={loading}
                 />
             }
             

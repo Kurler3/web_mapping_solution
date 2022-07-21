@@ -53,6 +53,17 @@ body {
   }
 }
 
+/* SPIN ANIMATION */
+@keyframes spinAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* ------------------ */
 
 /* COMMON CSS */
@@ -240,5 +251,34 @@ body {
 }
 .openControlsBodyCordFilled:hover {
   background: var(--color-remove);
+}
 
+/* OPEN CONTROLS DIRECTIONS */
+.openControlsDirectionsGetRouteBtn, .loadingRouteBtn {
+  margin: 10px 0px;
+  width: 76%;
+  padding: 10px 0px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: var(--common-box-shadow); 
+  background: var(--blue-bg);
+  color: white;
+  font-weight: 600;
+  font-size: 17px;
+  position: relative;
+  cursor: pointer;
+  transition: var(--common-transition);
+  height: 50px;
+} 
+.openControlsDirectionsGetRouteBtn:hover {
+  transform: scale(1.05);
+}
+
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 5px solid;
+    border-color: white transparent white transparent;
+    border-radius: 50%;
+    animation: spinAnimation 1.2s linear infinite;
 }

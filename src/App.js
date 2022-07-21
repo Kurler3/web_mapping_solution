@@ -65,7 +65,7 @@ const App = () => {
   
 
   ////////////////////////
-  // RENDER ///////////
+  // RENDER //////////////
   ////////////////////////
 
   return (
@@ -81,6 +81,8 @@ const App = () => {
           handleResetMapData={handleResetMapData}
           handleResetStartEndMapData={handleResetStartEndMapData}
           handleSwitchMapData={handleSwitchMapData}
+          calculatedRoute={state.calculatedRoute}
+          loading={state.loading}
         />
 
         {/* MAP LIBRE MAP */}
