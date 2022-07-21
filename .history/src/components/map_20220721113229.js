@@ -93,7 +93,6 @@ const Map = () => {
     }, []);
 
     console.log("State", state.startCords, state.endCords);
-
     // UPDATE ROUTE FUNCTION 
     const updateRoute = useCallback(async (startCords, endCords) => {
 
@@ -178,10 +177,7 @@ const Map = () => {
         
     }, [state.currentStep, state.startCords, updateRoute]);
     
-    if(map.current) {
-      console.log("Map: ", map.current.getSource("start")._data);
-    }
-    
+
 
     // INITIALIZE THE MAP
     useEffect(() => {

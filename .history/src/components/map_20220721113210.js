@@ -42,7 +42,6 @@ const Map = () => {
         });
 
         // START CIRCLE VISUAL DATA REPRESENTATION OF COORDINATES IN MAP
-        // LISTENS DIRECTLY TO CHANGES IN END SOURCE
         map.current.addLayer({
           id: "start-circle",
           type: "circle",
@@ -56,7 +55,6 @@ const Map = () => {
         });
 
         // END CIRCLE (WILL SWITCH TO ICON) DATA REPRESENTATION OF COORDINATES IN MAP
-        // LISTENS DIRECTLY TO CHANGES IN END SOURCE
         map.current.addLayer({
           id: "end-circle",
           type: "circle",
@@ -93,7 +91,6 @@ const Map = () => {
     }, []);
 
     console.log("State", state.startCords, state.endCords);
-
     // UPDATE ROUTE FUNCTION 
     const updateRoute = useCallback(async (startCords, endCords) => {
 
@@ -178,10 +175,7 @@ const Map = () => {
         
     }, [state.currentStep, state.startCords, updateRoute]);
     
-    if(map.current) {
-      console.log("Map: ", map.current.getSource("start")._data);
-    }
-    
+
 
     // INITIALIZE THE MAP
     useEffect(() => {

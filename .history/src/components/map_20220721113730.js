@@ -178,10 +178,7 @@ const Map = () => {
         
     }, [state.currentStep, state.startCords, updateRoute]);
     
-    if(map.current) {
-      console.log("Map: ", map.current.getSource("start")._data);
-    }
-    
+    console.log("Map: ", map.current.getSource("start"));
 
     // INITIALIZE THE MAP
     useEffect(() => {

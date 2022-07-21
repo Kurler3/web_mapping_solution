@@ -178,7 +178,7 @@ const Map = () => {
         
     }, [state.currentStep, state.startCords, updateRoute]);
     
-    if(map.current) {
+    if(map) {
       console.log("Map: ", map.current.getSource("start")._data);
     }
     
