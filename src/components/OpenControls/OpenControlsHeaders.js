@@ -10,7 +10,7 @@ const OpenControlsHeaders = ({
     // HANDLE CLOSE CONTROLS
     handleCloseControls,
 }) => {
-
+    
     return (
          <div className="flexBetweenCenter openControlsHeaders">
 

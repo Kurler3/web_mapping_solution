@@ -17,6 +17,8 @@ export const initialState = {
     isChosing: false,
     // WAY OF TRANSPORT CHOSEN
     transportChosen: null,
+    // CALCULATED ROUTE
+    calculatedRoute: null,
 };
 
 // EXPORT REDUCER

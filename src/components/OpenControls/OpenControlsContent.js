@@ -1,5 +1,6 @@
 import {memo, useCallback} from 'react';
 import { APP_ACTION_TYPES } from '../../utils/constants';
+import OpenControlsBody from './OpenControlsBody';
 import OpenControlsHeaders from './OpenControlsHeaders';
 
 const OpenControlsContainer = ({
@@ -11,6 +12,12 @@ const OpenControlsContainer = ({
     transportChosen,
     // APP DISPATCHER,
     appDispatcher,
+    // RESET MAP DATA
+    handleResetMapData,
+    // RESET START/END MAP DATA
+    handleResetStartEndMapData,
+    // HANDLE SWITCH START/END MAP DATA
+    handleSwitchMapData,
 }) => {
 
 
@@ -34,7 +41,10 @@ const OpenControlsContainer = ({
         appDispatcher({
             type: APP_ACTION_TYPES.reset
         });
-    }, [appDispatcher]);
+
+        // RESET MAP DATA
+        handleResetMapData();
+    }, [appDispatcher, handleResetMapData]);
 
     return (
         <div className='flexColStartCenter openControlsContentContainer'
@@ -46,6 +56,18 @@ const OpenControlsContainer = ({
                 handleSelectTransport={handleSelectTransport}
                 handleCloseControls={handleCloseControls}
             />
+
+            {/* BODY */}
+            <OpenControlsBody 
+                startCords={startCords}
+                endCords={endCords}
+                appDispatcher={appDispatcher}
+                handleResetStartEndMapData={handleResetStartEndMapData}
+                handleSwitchMapData={handleSwitchMapData}
+            />
+
+            {/* DIRECTIONS CONTAINER */}
+            
 
         </div>
     );

@@ -7,9 +7,17 @@
   --blue-bg: #3492eb;
   /* ON HOVER ICON BTN BG */
   --hover-icon-btn-bg: #ebebeb;
+  /* LIGHT GRAY BG */
+  --light-gray-bg: #f0efef;
 
   /* COMMON BOX SHADOW */
   --common-box-shadow: 2px 2px 4px 0px rgba(0, 0, 0,0.3);
+
+  /* COLOR GOOD */
+  --color-good: #39b321;
+
+  /* COLOR REMOVE */
+  --color-remove: #e93636;
 
   /* COMMON TRANSITION */
   --common-transition: 0.2s all ease;
@@ -64,6 +72,18 @@ body {
   justify-content: flex-start;
   align-items: center;
 }
+.flexColCenterCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.flexColBetweenCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
 
 /* APP */
 .App {
@@ -101,7 +121,7 @@ body {
 /* OPEN CONTROLS CONTAINER */
 .openControlsContainer {
   background: white;
-  min-width: 20vw;
+  width: 20vw;
   height: 100vh;
   box-shadow: 4px 0px 4px 0px rgba(0, 0, 0,0.3);
 
@@ -151,6 +171,7 @@ body {
   width: 100%;
 }
 
+/* OPEN CONTROLS CONTENT HEADERS */
 .openControlsContentTransportBtn{
   margin: 0px 5px;
   border-radius: 20px;
@@ -178,4 +199,46 @@ body {
 }
 .openControlsHeaderCloseBtn:hover {
   background: var(--hover-icon-btn-bg);
+}
+
+/* OPEN CONTROLS BODY */
+
+.openControlsBody {
+  padding: 10px;
+  width: 100%;
+  min-width: 200px;
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0,0.3);
+}
+
+.openControlBodySwitchBtn {
+  /* REVERSE ICON */
+  background-image: url(//maps.gstatic.com/consumer/images/icons/1x/swap_vert_grey800_24dp.png);
+  background-size: 24px 24px;
+  width: 24px;
+  height: 100%;
+}
+
+.openControlsBodyCordContainer, .openControlsBodyCordFilled {
+  width: 80%;
+  text-align: center;
+  margin: 5px 10px;
+  padding: 16px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-gray);
+  box-shadow: var(--common-box-shadow);
+  font-weight: 500;
+  font-size: 16px;
+  background: var(--light-gray-bg);
+  transition: var(--common-transition);
+}
+
+.openControlsBodyCordFilled {
+  cursor: pointer;
+  background: var(--color-good);
+  color: white;
+  border: none;
+}
+.openControlsBodyCordFilled:hover {
+  background: var(--color-remove);
+
 }

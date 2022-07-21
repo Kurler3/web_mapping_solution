@@ -14,6 +14,12 @@ const Controls = ({
     endCords,
     // APP DISPATCHER
     appDispatcher,
+    // RESET MAP DATA
+    handleResetMapData,
+    // RESET START/END MAP DATA
+    handleResetStartEndMapData,
+    // HANDLE SWITCH START/END MAP DATA
+    handleSwitchMapData,
 }) => {
 
 
@@ -37,7 +43,7 @@ const Controls = ({
                 !isChoosing ?
 
                 <div className='startChooseBtn flexCenterCenter'
-                    onClick={handleOpenControlContainer}
+                    onClick={handleOpenControlContainer} type="button"
                 >
                 
                     {/* ICON */}
@@ -54,6 +60,9 @@ const Controls = ({
                     endCords={endCords}
                     transportChosen={transportChosen}
                     appDispatcher={appDispatcher}
+                    handleResetMapData={handleResetMapData}
+                    handleResetStartEndMapData={handleResetStartEndMapData}
+                    handleSwitchMapData={handleSwitchMapData}
                 />
             }
             

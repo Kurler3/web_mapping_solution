@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useRef, useState} from 'react';
+import {memo, useCallback, useEffect, useRef} from 'react';
 import maplibregl from 'maplibre-gl';
 import mockResponse from '../response.json';
 import { APP_ACTION_TYPES, CLICK_MAP_STEP, EMPTY_MAP_SOURCE } from '../utils/constants';
@@ -9,6 +9,8 @@ import { solveRoute } from '@esri/arcgis-rest-routing';
 
 // COMPONENT
 const Map = ({
+  // IS CHOOSING
+  isChoosing,
   // LOADING
   loading,
   // START CORDS
@@ -21,26 +23,15 @@ const Map = ({
   currentStep,
   // APP DISPATCHER,
   appDispatcher,
+  // MAP REFERENCE
+  map,
 }) => {
 
     // MAP CONTAINER REF
     const mapContainer = useRef(null);
 
-    // MAP REP
-    const map = useRef(null);
-
-   
-    // // START CORDS, END CORDS AND ZOOM 
-    // const [state, setState] = useState({
-    //     startCords: [mockResponse.waypoints[1].location[0], mockResponse.waypoints[1].location[1]],
-    //     endCords: null,
-    //     zoom: 13,
-    //     currentStep: CLICK_MAP_STEP.start,
-    //     loading: false,
-    // });
-
     // ADD CIRCLE LAYERS FUNCTION
-    const addCircleLayers = () => {
+    const addCircleLayers = useCallback(() => {
 
         // SOURCE POINT GEO JSON DATA HOLDER
         map.current.addSource("start", {
@@ -88,7 +79,7 @@ const Map = ({
         );
 
       
-      }
+      }, [map]);
 
     // ADD ROUTE LAYERS FUNCTION (WILL BE THE LINE FROM SOURCE TO DESTINATION)
     const addRouteLayers = useCallback(() => {
@@ -111,12 +102,17 @@ const Map = ({
         }
       });
 
-    }, []);
+    }, [map]);
 
     // UPDATE ROUTE FUNCTION 
     const updateRoute = useCallback(async (startCords, endCords) => {
 
       // SET LOADING
+      appDispatcher({
+        type: APP_ACTION_TYPES.setKey,
+        key: 'loading',
+        value: true,
+      });
 
       // AUTH FOR ArcGIS REST API
       let auth = ApiKeyManager.fromKey('AAPK65f73d9f93544540bed1ec91bce6bfb23iSWU4RgwFb79XWl9vAWtF6_R5vjmPhCtMzlrwvxFoCF4MwnK3cJ0WYirUHLnuXB');
@@ -133,7 +129,14 @@ const Map = ({
         // SET ROUTE SOURCE
         map.current.getSource("route").setData(response.routes.geoJson);
 
-        console.log("Response: ", response);
+        // UPDATE APP STATE
+        appDispatcher({
+          type: APP_ACTION_TYPES.setMultiple,
+          object: {
+            loading: false,
+            calculatedRoute: response,
+          }
+        });
 
       } catch (error) {
         console.log("Error fetching best path: ", error);
@@ -141,7 +144,7 @@ const Map = ({
         // SET ERROR IN STATE TO SHOW USER AND RESET ALL DATA
       }
 
-    }, []);
+    }, [appDispatcher, map]);
 
     // ON CLICK MAP EVENT HANDLER
     const onClickMap = useCallback((e) => {
@@ -174,6 +177,7 @@ const Map = ({
               startCords: coordinates,
               endCords: null,
               currentStep: CLICK_MAP_STEP.end,
+              isChoosing: true,
             },
           });
           
@@ -188,6 +192,7 @@ const Map = ({
             object: {
               endCords: coordinates,
               currentStep: CLICK_MAP_STEP.start,
+              isChoosing: true,
             }
           });
 
@@ -198,7 +203,7 @@ const Map = ({
           updateRoute(startCords, coordinates);
         }
 
-    }, [appDispatcher, currentStep, startCords, updateRoute]);
+    }, [appDispatcher, currentStep, map, startCords, updateRoute]);
     
     // INITIALIZE THE MAP
     useEffect(() => {
@@ -225,7 +230,7 @@ const Map = ({
         // LISTEN TO ON CLICK EVENT
         map.current.on("click", onClickMap);
 
-    }, [addRouteLayers, onClickMap, zoom]);
+    }, [addCircleLayers, addRouteLayers, map, onClickMap, zoom]);
 
     
     return (
