@@ -1,5 +1,5 @@
 import {memo, useCallback} from 'react';
-import { APP_ACTION_TYPES } from '../../utils/constants';
+import { APP_ACTION_TYPES, CLICK_MAP_STEP } from '../../utils/constants';
 
 
 const OpenControlsBody = ({
@@ -28,12 +28,14 @@ const OpenControlsBody = ({
 
     // HANDLE RESET START/END POINT
     const handleResetStartEndPoint = useCallback((isStart) => {
+        
         appDispatcher({
             type: APP_ACTION_TYPES.setMultiple,
             object: {
-                startCords: isStart ? null : startCords,
+                startCords: isStart === true ? null : startCords,
                 endCords: null,
-                calculatedRoute: startCords && endCords ? null : calculatedRoute
+                calculatedRoute: startCords && endCords ? null : calculatedRoute,
+                currentStep: isStart ? CLICK_MAP_STEP.start : CLICK_MAP_STEP.end,
             }
         });
 
@@ -49,6 +51,9 @@ const OpenControlsBody = ({
         // IF BOTH START CORDS AND END CORDS EXIST
         if(startCords && endCords) {
 
+            // UPDATE MAP DATA
+            handleSwitchMapData();
+
             // SWITCH IN APP STATE AND MAKE CALCULATED ROUTE BACK TO NULL
             appDispatcher({
                 type: APP_ACTION_TYPES.setMultiple,
@@ -58,10 +63,6 @@ const OpenControlsBody = ({
                     calculatedRoute: null,
                 }
             });
-
-            // UPDATE MAP DATA
-            handleSwitchMapData();
-
         }
 
     }, [appDispatcher, endCords, handleSwitchMapData, startCords]);
@@ -134,7 +135,9 @@ const OpenControlsBody = ({
             </div>
 
             {/* SWITCH */}
-            <div className='flexCenterCenter material-icons' onClick={handleSwitchPoints}>
+            <div className={`flexCenterCenter material-icons  ${!startCords || !endCords ? "disabledSwitchRoutesIcon" : "switchRoutesIcon"}`} 
+                onClick={handleSwitchPoints}
+            >
                 change_circle
             </div>
 

@@ -3,9 +3,6 @@ import maplibregl from 'maplibre-gl';
 import mockResponse from '../response.json';
 import { APP_ACTION_TYPES, CLICK_MAP_STEP, EMPTY_MAP_SOURCE } from '../utils/constants';
 
-// ArcGIS ROUTE SERVICE
-import { ApiKeyManager } from "@esri/arcgis-rest-request";
-import { solveRoute } from '@esri/arcgis-rest-routing';
 
 // COMPONENT
 const Map = ({
@@ -104,47 +101,6 @@ const Map = ({
 
     }, [map]);
 
-    // UPDATE ROUTE FUNCTION 
-    const updateRoute = useCallback(async (startCords, endCords) => {
-
-      // SET LOADING
-      appDispatcher({
-        type: APP_ACTION_TYPES.setKey,
-        key: 'loading',
-        value: true,
-      });
-
-      // AUTH FOR ArcGIS REST API
-      let auth = ApiKeyManager.fromKey('AAPK65f73d9f93544540bed1ec91bce6bfb23iSWU4RgwFb79XWl9vAWtF6_R5vjmPhCtMzlrwvxFoCF4MwnK3cJ0WYirUHLnuXB');
-      
-      try {
-        
-        // GET BEST PATH
-        let response = await solveRoute({
-          stops: [startCords, endCords],
-          endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
-          authentication: auth,
-        });
-
-        // SET ROUTE SOURCE
-        map.current.getSource("route").setData(response.routes.geoJson);
-
-        // UPDATE APP STATE
-        appDispatcher({
-          type: APP_ACTION_TYPES.setMultiple,
-          object: {
-            loading: false,
-            calculatedRoute: response,
-          }
-        });
-
-      } catch (error) {
-        console.log("Error fetching best path: ", error);
-
-        // SET ERROR IN STATE TO SHOW USER AND RESET ALL DATA
-      }
-
-    }, [appDispatcher, map]);
 
     // ON CLICK MAP EVENT HANDLER
     const onClickMap = useCallback((e) => {
@@ -154,11 +110,13 @@ const Map = ({
 
       let point = {
         type: "Point",
-        coordinates
+        coordinates,
       };
 
+      let dispatchObject;
+
       if (
-        currentStep === CLICK_MAP_STEP.start
+         map.current.getSource('start')._data===EMPTY_MAP_SOURCE && currentStep === CLICK_MAP_STEP.start && !startCords
         ) {
           
           // SET NEW COORDINATES TO MAP SOURCE WITH "start" ID.
@@ -171,16 +129,14 @@ const Map = ({
           
           // UPDATE APP STATE
           // UPDATE START CORDS, SET END CORDS TO NULL AND UPDATE CLICK STEP
-          appDispatcher({
-            type: APP_ACTION_TYPES.setMultiple,
-            object: {
+        
+          dispatchObject = {
               startCords: coordinates,
               endCords: null,
               currentStep: CLICK_MAP_STEP.end,
               isChoosing: true,
               calculatedRoute: null,
-            },
-          });
+          };
           
       } else {
           // SET MAP END SOURCE TO NEW POINT
@@ -188,24 +144,29 @@ const Map = ({
 
           // UPDATE APP STATE
           // SET NEW END CORDS AND SET CURRENT STEP BACK TO START
-          appDispatcher({
-            type: APP_ACTION_TYPES.setMultiple,
-            object: {
+          
+            dispatchObject = {
               endCords: coordinates,
               currentStep: CLICK_MAP_STEP.start,
               isChoosing: true,
               calculatedRoute: null,
-            }
+            };
+
+        }
+
+        if(dispatchObject) {
+          appDispatcher({
+            type: APP_ACTION_TYPES.setMultiple,
+            object: dispatchObject,
           });
-
         }
+       
+        // // IF BOTH START AND END COORDINATES ARE FILLED, THEN SEARCH BEST PATH 
+        // if(currentStep===CLICK_MAP_STEP.end && coordinates) {          
+        //   updateRoute(startCords, coordinates);
+        // }
 
-        // IF BOTH START AND END COORDINATES ARE FILLED, THEN SEARCH BEST PATH 
-        if(currentStep===CLICK_MAP_STEP.end && coordinates) {          
-          updateRoute(startCords, coordinates);
-        }
-
-    }, [appDispatcher, currentStep, map, startCords, updateRoute]);
+    }, [appDispatcher, currentStep, map, startCords]);
     
     // INITIALIZE THE MAP
     useEffect(() => {
@@ -231,6 +192,12 @@ const Map = ({
 
         // LISTEN TO ON CLICK EVENT
         map.current.on("click", onClickMap);
+
+        return () => {
+          if(map.current) {
+            map.current.off("click", onClickMap);
+          }
+        }
 
     }, [addCircleLayers, addRouteLayers, map, onClickMap, zoom]);
 

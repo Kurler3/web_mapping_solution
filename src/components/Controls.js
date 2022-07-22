@@ -24,6 +24,10 @@ const Controls = ({
     calculatedRoute,
     // LOADING
     loading,
+    // UPDATE ROUTE
+    updateRoute,
+    // HANDLE CHANGE TRANSPORT IN MAP LAYER STYLE
+    handleChangeTransport,
 }) => {
 
 
@@ -69,6 +73,8 @@ const Controls = ({
                     handleSwitchMapData={handleSwitchMapData}
                     calculatedRoute={calculatedRoute}
                     loading={loading}
+                    updateRoute={updateRoute}
+                    handleChangeTransport={handleChangeTransport}
                 />
             }
             

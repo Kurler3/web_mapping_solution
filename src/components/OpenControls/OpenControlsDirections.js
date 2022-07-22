@@ -9,9 +9,9 @@ const OpenControlsDirections = ({
     calculatedRoute,
     // LOADING
     loading,
+    // UPDATE ROUTE
+    updateRoute,
 }) => {
-
-
 
     ////////////////////////
     // RENDER //////////////
@@ -25,9 +25,9 @@ const OpenControlsDirections = ({
                 startCords && endCords ? 
 
                 <button className={`flexCenterCenter
-                    ${loading?"loadingRouteBtn" : "openControlsDirectionsGetRouteBtn"}
-                `}
-
+                        ${loading?"loadingRouteBtn" : "openControlsDirectionsGetRouteBtn"}
+                    `}
+                    onClick={() => !loading ? updateRoute() : {}}
                 >
                    
                     {
@@ -56,6 +56,16 @@ const OpenControlsDirections = ({
             :null}
 
             {/* MAPPING OF DIRECTIONS */}
+            {
+                calculatedRoute ?
+
+                calculatedRoute.directions[0].features.map((f, index) => (
+                    <span key={`open_controls_directions_${f.attributes.text}_${index}`}>
+                        {f.attributes.text}
+                    </span>
+                ))
+
+            :null}
 
         </div>
     );

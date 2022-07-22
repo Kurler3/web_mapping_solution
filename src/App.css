@@ -220,15 +220,21 @@ body {
   min-width: 200px;
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0,0.3);
 }
-
-.openControlBodySwitchBtn {
-  /* REVERSE ICON */
-  background-image: url(//maps.gstatic.com/consumer/images/icons/1x/swap_vert_grey800_24dp.png);
-  background-size: 24px 24px;
-  width: 24px;
-  height: 100%;
+.switchRoutesIcon, .disabledSwitchRoutesIcon {
+  cursor: pointer;
+  font-size: 30px;
+  transition: 0.2s all ease;
+  position: relative;
 }
-
+.switchRoutesIcon:hover {
+  color: var(--blue-bg);
+  transform: rotate(-180deg) scale(1.1);
+}
+.disabledSwitchRoutesIcon {
+  color: var(--border-gray);
+  cursor: default;
+  opacity: 0.8;
+}
 .openControlsBodyCordContainer, .openControlsBodyCordFilled {
   width: 80%;
   text-align: center;
@@ -273,7 +279,6 @@ body {
 .openControlsDirectionsGetRouteBtn:hover {
   transform: scale(1.05);
 }
-
 .spinner {
     width: 18px;
     height: 18px;

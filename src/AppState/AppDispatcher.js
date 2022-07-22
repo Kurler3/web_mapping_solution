@@ -1,4 +1,4 @@
-import { APP_ACTION_TYPES, CLICK_MAP_STEP } from '../utils/constants';
+import { APP_ACTION_TYPES, CLICK_MAP_STEP, TRANSPORT_METHODS } from '../utils/constants';
 
 
 // DEFINE THE INITIAL STATE
@@ -16,7 +16,7 @@ export const initialState = {
     // IF IS CHOSING OR NOT
     isChosing: false,
     // WAY OF TRANSPORT CHOSEN
-    transportChosen: null,
+    transportChosen: TRANSPORT_METHODS.Car.id,
     // CALCULATED ROUTE
     calculatedRoute: null,
 };
@@ -47,6 +47,21 @@ export default function appReducer(state=initialState, action) {
             return {
                 ...state,
                 ...action.object,
+            }
+        case APP_ACTION_TYPES.clickMap:
+
+            // step: CLICK_MAP_STEP.start/end
+            // cords: [long, lat]
+            // 
+            //
+
+            return {
+                ...state,
+                currentStep: action.step,
+                endCords: action.step === CLICK_MAP_STEP.end ? null : action.cords,
+                startCords: action.step === CLICK_MAP_STEP.end ? action.cords : state.startCords,
+                isChoosing: true,
+                calculatedRoute: null,
             }
         case APP_ACTION_TYPES.reset:
             return initialState;

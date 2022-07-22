@@ -15,6 +15,7 @@ export const APP_ACTION_TYPES = {
     setKey: "SET_KEY",
     setMultiple: "SET_MULTIPLE",
     reset: "RESET_STATE",
+    clickMap: "CLICK_MAP",
 }
 
 
@@ -24,15 +25,28 @@ export const TRANSPORT_METHODS = {
     Car: {
         id: 'car',
         icon: 'drive_eta',
+        routeLinePaint: {
+            "line-color": "#5190f5",
+            "line-width": 8,
+        },
     },
     // FOOT
     Foot: {
         id: 'foot',
         icon: 'directions_walk',
+        routeLinePaint: {
+            "line-color": "#5190f5",
+            "line-width": 8,
+            "line-gap-width": 4,
+        },
     },
     // SUBWAY
     Subway: {
         id: "subway",
-        icon: 'directions_subway'
+        icon: 'directions_subway',
+        routeLinePaint: {
+            "line-color": "#f2b227",
+            "line-width": 10,
+        }
     }
 };

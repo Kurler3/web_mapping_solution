@@ -23,6 +23,10 @@ const OpenControlsContainer = ({
     calculatedRoute,
     // LOADING
     loading,
+    // UPDATE ROUTE
+    updateRoute,
+    // HANDLE CHANGE TRANSPORT IN MAP LAYER STYLE
+    handleChangeTransport,
 }) => {
 
 
@@ -32,13 +36,20 @@ const OpenControlsContainer = ({
         // IF NOT SAME THEN UPDATE
         if(transportChosen!==transportId) {
             appDispatcher({
-                type: APP_ACTION_TYPES.setKey,
-                key: 'transportChosen',
-                value: transportId,
+                type: APP_ACTION_TYPES.setMultiple,
+                object: {
+                    transportChosen: transportId,
+                    calculatedRoute: null,
+                }
             });
+
+
+            // CHANGE MAP LAYER DATA ACCORDING TO THE TRANSPORT CHOSEN
+            handleChangeTransport(transportId);
+
         }
 
-    }, [appDispatcher, transportChosen]);
+    }, [appDispatcher, handleChangeTransport, transportChosen]);
 
     // HANDLES WHEN USER CLICKS CLOSE CONTROLS BTN
     const handleCloseControls = useCallback(() => {
@@ -77,6 +88,7 @@ const OpenControlsContainer = ({
                 endCords={endCords}
                 calculatedRoute={calculatedRoute}
                 loading={loading}
+                updateRoute={updateRoute}
             />
 
         </div>
