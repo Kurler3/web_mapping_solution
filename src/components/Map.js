@@ -1,7 +1,10 @@
 import {memo, useCallback, useEffect, useRef} from 'react';
 import maplibregl from 'maplibre-gl';
 import mockResponse from '../response.json';
-import { APP_ACTION_TYPES, CLICK_MAP_STEP, EMPTY_MAP_SOURCE } from '../utils/constants';
+import { APP_ACTION_TYPES, CLICK_MAP_STEP, EMPTY_MAP_SOURCE, TRANSPORT_METHODS } from '../utils/constants';
+
+// IMPORT SUBWAY IMAGE
+import subwayIcon from '../img/subway.png';
 
 
 // COMPONENT
@@ -22,6 +25,8 @@ const Map = ({
   appDispatcher,
   // MAP REFERENCE
   map,
+  // CALCULATED ROUTE
+  calculatedRoute,
 }) => {
 
     // MAP CONTAINER REF
@@ -63,17 +68,42 @@ const Map = ({
 
         // END CIRCLE (WILL SWITCH TO ICON) DATA REPRESENTATION OF COORDINATES IN MAP
         // LISTENS DIRECTLY TO CHANGES IN END SOURCE
-        map.current.addLayer(
-          {
-            id: "end-circle",
-            type: "circle",
-            source: "end",
-            paint: {
-              "circle-radius": 7,
-              "circle-color": "red",
-            },
-          }
+
+        // LOAD SUBWAY AND PLACE ICONS
+
+        // LOAD PLACE MARKER
+        map.current.loadImage(
+              'https://cdn2.iconfinder.com/data/icons/pin-1/100/.svg-2-512.png',
+              (error, image) => {
+                
+                // IF ERROR
+                if(error) throw error;
+
+                // ELSE ADD IMAGE AND ADD LAYER
+
+                map.current.addImage('place-marker', image);
+                
+                map.current.addLayer(
+                  {
+                    id: "end-layer",
+                    type: "symbol",
+                    source: "end",
+                    layout: {
+                      'icon-image': 'place-marker', // reference the image
+                      'icon-size': 0.09
+                    }
+                  }
+                );
+
+
+              }
         );
+
+        // LOAD SUBWAY
+        map.current.loadImage(subwayIcon, (error, image) => {
+          if(error) throw error;
+          map.current.addImage('subway-marker', image);
+        })
 
       
       }, [map]);
@@ -91,12 +121,8 @@ const Map = ({
         id: "route-line",
         type: "line", // NEEDS TO BE DYNAMIC LATER ON
         source: "route",
-        paint: {
-          // THIS ALSO NEEDS TO BE DYNAMIC LATER ON
-          "line-color": "hsl(205, 100%, 50%)",
-          "line-width": 4,
-          "line-opacity": 0.6
-        }
+        // DEFAULT TRANSPORT WAY IS CAR
+        paint: TRANSPORT_METHODS.Car.routeLinePaint,
       });
 
     }, [map]);
@@ -116,7 +142,8 @@ const Map = ({
       let dispatchObject;
 
       if (
-         map.current.getSource('start')._data===EMPTY_MAP_SOURCE && currentStep === CLICK_MAP_STEP.start && !startCords
+         //map.current.getSource('start')._data===EMPTY_MAP_SOURCE && 
+         currentStep === CLICK_MAP_STEP.start && !startCords
         ) {
           
           // SET NEW COORDINATES TO MAP SOURCE WITH "start" ID.
@@ -142,6 +169,11 @@ const Map = ({
           // SET MAP END SOURCE TO NEW POINT
           map.current.getSource("end").setData(point);
 
+          // IF ALREADY CALCULATED A ROUTE, THEN MAKE IT NULL
+          if(calculatedRoute) {
+            map.current.getSource("route").setData(EMPTY_MAP_SOURCE);
+          }
+
           // UPDATE APP STATE
           // SET NEW END CORDS AND SET CURRENT STEP BACK TO START
           
@@ -166,7 +198,7 @@ const Map = ({
         //   updateRoute(startCords, coordinates);
         // }
 
-    }, [appDispatcher, currentStep, map, startCords]);
+    }, [appDispatcher, calculatedRoute, currentStep, map, startCords]);
     
     // INITIALIZE THE MAP
     useEffect(() => {

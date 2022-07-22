@@ -9,6 +9,8 @@
   --hover-icon-btn-bg: #ebebeb;
   /* LIGHT GRAY BG */
   --light-gray-bg: #f0efef;
+  /* GREY TEXT */
+  --light-gray-txt: #9e9e9e;
 
   /* COMMON BOX SHADOW */
   --common-box-shadow: 2px 2px 4px 0px rgba(0, 0, 0,0.3);
@@ -64,6 +66,16 @@ body {
   }
 }
 
+/* OPACITY IN */
+@keyframes opacityIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 /* ------------------ */
 
 /* COMMON CSS */
@@ -94,6 +106,19 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+}
+.flexColStartStart {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+/* ELLIPSIS ONE LINE */
+.ellipsisOneLine {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* APP */
@@ -133,6 +158,7 @@ body {
 .openControlsContainer {
   background: white;
   width: 20vw;
+  min-width: 300px;
   height: 100vh;
   box-shadow: 4px 0px 4px 0px rgba(0, 0, 0,0.3);
 
@@ -261,7 +287,7 @@ body {
 
 /* OPEN CONTROLS DIRECTIONS */
 .openControlsDirectionsGetRouteBtn, .loadingRouteBtn {
-  margin: 10px 0px;
+  margin: 20px 0px;
   width: 76%;
   padding: 10px 0px;
   border-radius: 10px;
@@ -286,4 +312,71 @@ body {
     border-color: white transparent white transparent;
     border-radius: 50%;
     animation: spinAnimation 1.2s linear infinite;
+}
+.openControlsDirectionsTimeContainer {
+  width: 100%;
+  padding: 10px 0px 20px 0px;
+  border-bottom: 1px solid var(--border-gray); 
+}
+.openControlsDirectionsTime {
+  font-weight: 500;
+  font-size: 20px;
+}
+.openControlsDirectionsDistance {
+  margin-left: 5px;
+  font-size: 14px;
+  color: var(--light-gray-txt);
+}
+.openControlsDirectionsList {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 50%;
+  max-height: 570px;
+  margin-top: 10px;
+}
+.openControlsDirectionsListItem {
+  width: 80%;
+  border: 1px solid var(--border-gray);
+  border-radius: 10px;
+  margin-top: 15px;
+  padding: 10px;
+  box-shadow: var(--common-box-shadow);
+
+  /* OPACITY IN ANIMATION */
+  animation-name: opacityIn;
+  animation-timing-function: ease;
+  animation-duration: 200ms;
+  animation-iteration-count: 1;
+}
+.openControlsDirectionsListItemText {
+  text-align: start;
+  max-width: 100%;
+}
+.openControlsDirectionsListItemTime {
+  font-size: 12px;
+  color: var(--light-gray-txt);
+  margin-top: 3px;
+}
+
+/* MOCK ROUTING BTN */
+.mockRoutingBtn {
+  position: absolute;
+  z-index: 1000;
+  top: 20px;
+  right: 30px;
+  padding: 15px;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: var(--common-box-shadow);
+  color: white;
+  background-color: var(--blue-bg);
+  cursor: pointer;
+  transition: var(--common-transition);
+}
+
+.mockRoutingBtn:hover {
+  transform: scale(1.1);
 }

@@ -1,4 +1,5 @@
-import React, {memo} from 'react';
+import React, {memo, useCallback} from 'react';
+import { secondsToHms } from '../../utils/functions';
 
 const OpenControlsDirections = ({
     // START CORDS
@@ -12,6 +13,11 @@ const OpenControlsDirections = ({
     // UPDATE ROUTE
     updateRoute,
 }) => {
+    console.log('calculatedRoute', calculatedRoute);
+
+
+
+
 
     ////////////////////////
     // RENDER //////////////
@@ -59,11 +65,82 @@ const OpenControlsDirections = ({
             {
                 calculatedRoute ?
 
-                calculatedRoute.directions[0].features.map((f, index) => (
-                    <span key={`open_controls_directions_${f.attributes.text}_${index}`}>
-                        {f.attributes.text}
-                    </span>
-                ))
+                <React.Fragment>
+
+                    {/* WARNINGS */}
+                    
+                    {
+                        calculatedRoute.messages.length > 0 || true ?
+                        
+                        <div className='flexCenterCenter'
+                            style={{
+                                margin: '5px 0px',
+                            }}
+                        >
+                            <span className='material-icons' 
+                                style={{
+                                    fontSize: '20px',
+                                    color: 'var(--color-remove)'
+                                }}
+                            >warning</span>
+
+                            <span style={{
+                                fontWeight: '500',
+                                marginLeft: '3px',
+                            }}>There's some warnings for this route</span>
+                        </div>
+                    :null}
+
+                    {/* TOTAL TRAVEL TIME +  TOTAL DISTANCE */}
+                    
+                    <div className='flexCenterCenter openControlsDirectionsTimeContainer'>
+
+                            {/* TOTAL TIME */}
+                            <span className="openControlsDirectionsTime">{secondsToHms(calculatedRoute.routes.features[0].attributes.Total_TravelTime * 60)}</span>
+
+                            {/* TOTAL KM */}
+                            <span className="openControlsDirectionsDistance">
+                                ({calculatedRoute.routes.features[0].attributes.Total_Kilometers.toFixed(2)} Km)
+                            </span>
+
+                    </div>
+                    
+
+                    {/* DIRECTIONS LIST */}
+                    <div className='flexColStartCenter openControlsDirectionsList'>
+                        {
+                            calculatedRoute.directions[0].features.map((f, index) => {
+
+                                let timeFromLastStop = secondsToHms(f.attributes.time * 60);
+
+                                return (
+                                    <div
+                                        key={`open_controls_directions_${f.attributes.text}_${index}`}
+                                        className='openControlsDirectionsListItem flexColStartStart'  
+                                    >
+
+                                        <span className='openControlsDirectionsListItemText'>
+                                            {f.attributes.text}
+                                        </span>
+                                        
+                                        {
+                                            timeFromLastStop ?
+
+                                            <span className="openControlsDirectionsListItemTime">
+                                                Time from last stop: {secondsToHms(f.attributes.time * 60)}
+                                            </span>
+                                        :null}
+                                        
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                    
+
+
+                </React.Fragment>
+                
 
             :null}
 

@@ -35,9 +35,9 @@ export const TRANSPORT_METHODS = {
         id: 'foot',
         icon: 'directions_walk',
         routeLinePaint: {
-            "line-color": "#5190f5",
-            "line-width": 8,
-            "line-gap-width": 4,
+            "line-color": "transparent",
+            "line-width": 2,
+            "line-dasharray": [0.1],
         },
     },
     // SUBWAY
@@ -46,7 +46,7 @@ export const TRANSPORT_METHODS = {
         icon: 'directions_subway',
         routeLinePaint: {
             "line-color": "#f2b227",
-            "line-width": 10,
+            "line-width": 8,
         }
     }
 };
