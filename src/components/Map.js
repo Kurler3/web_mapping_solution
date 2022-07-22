@@ -236,7 +236,7 @@ const Map = ({
     
     return (
         <div className='mapWrap'>
-            <div ref={mapContainer} className="map"></div>
+            <div ref={mapContainer} className="map" ></div>
         </div>
     );
 };

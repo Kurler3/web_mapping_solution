@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react';
+import React, {memo} from 'react';
 import { secondsToHms } from '../../utils/functions';
 
 const OpenControlsDirections = ({
@@ -70,7 +70,7 @@ const OpenControlsDirections = ({
                     {/* WARNINGS */}
                     
                     {
-                        calculatedRoute.messages.length > 0 || true ?
+                        calculatedRoute.messages.length > 0 ?
                         
                         <div className='flexCenterCenter'
                             style={{
@@ -100,7 +100,7 @@ const OpenControlsDirections = ({
 
                             {/* TOTAL KM */}
                             <span className="openControlsDirectionsDistance">
-                                ({calculatedRoute.routes.features[0].attributes.Total_Kilometers.toFixed(2)} Km)
+                                ({calculatedRoute.routes.features[0].attributes.Total_Kilometers.toFixed(2)} KM)
                             </span>
 
                     </div>

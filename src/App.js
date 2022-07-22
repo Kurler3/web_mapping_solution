@@ -5,10 +5,11 @@ import {memo, useCallback, useReducer, useRef} from 'react';
 import Map from './components/Map';
 import appReducer, { initialState } from './AppState/AppDispatcher';
 import Controls from './components/Controls';
-import { APP_ACTION_TYPES, EMPTY_MAP_SOURCE, TRANSPORT_METHODS } from './utils/constants';
+import { APP_ACTION_TYPES, EMPTY_MAP_SOURCE, TRANSPORT_METHODS, TRAVEL_MODE_JSONS } from './utils/constants';
 import { ApiKeyManager } from '@esri/arcgis-rest-request';
 import { solveRoute } from '@esri/arcgis-rest-routing';
 import mockResponse from './response.json';
+import maplibregl from 'maplibre-gl';
 
 
 
@@ -83,29 +84,41 @@ const App = () => {
 
    // UPDATE ROUTE FUNCTION 
    const updateRoute = useCallback(async () => {
-
-    // SET LOADING
-    appDispatcher({
-      type: APP_ACTION_TYPES.setKey,
-      key: 'loading',
-      value: true,
-    });
-
-    // AUTH FOR ArcGIS REST API
-    let auth = ApiKeyManager.fromKey('AAPK65f73d9f93544540bed1ec91bce6bfb23iSWU4RgwFb79XWl9vAWtF6_R5vjmPhCtMzlrwvxFoCF4MwnK3cJ0WYirUHLnuXB');
-    
     try {
 
+      // SET LOADING
+      appDispatcher({
+        type: APP_ACTION_TYPES.setKey,
+        key: 'loading',
+        value: true,
+      });
+
+      // AUTH FOR ArcGIS REST API
+      let auth = ApiKeyManager.fromKey('AAPK65f73d9f93544540bed1ec91bce6bfb23iSWU4RgwFb79XWl9vAWtF6_R5vjmPhCtMzlrwvxFoCF4MwnK3cJ0WYirUHLnuXB');
+
+     
 
       // GET BEST PATH
       let response = await solveRoute({
         stops: [state.startCords, state.endCords],
-        endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
+        endpoint: 'https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?',
+        // endpoint: `https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?travelMode=${JSON.stringify(TRAVEL_MODE_JSONS[state.transportChosen])}`,
         authentication: auth,
+        travelMode: TRAVEL_MODE_JSONS[state.transportChosen],
       });
 
-   
-      console.log("Resolve: ", response.routes);
+      // let response = await fetch(`https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?stops=${[state.startCords, state.endCords]}&travelMode=${JSON.stringify(TRAVEL_MODE_JSONS[state.transportChosen])}&f=geojson&token=1SNgVk35Rynt3hwkQkl1BahIrB-jjR19HWTnEWZFsgo2mTv5P0O4Ca8QBd6C8aqPoqMymFWuUdKO1agCzjbSXRde13HRe6R8pAaubahItYM2B4blaY29esvelKKGX44h`)
+
+      // BOUNDS
+      let bounds = new maplibregl.LngLatBounds();
+
+      // SET BOUNDS
+      for(let path of response.routes.features[0].geometry.paths[0]) {
+        bounds.extend(path);
+      }
+
+      // SET FIT BOUNDS
+      map.current.fitBounds(bounds, {padding: 300});
 
       // SET ROUTE SOURCE
       map.current.getSource("route").setData(response.routes.geoJson);
@@ -122,9 +135,16 @@ const App = () => {
     } catch (error) {
       console.log("Error fetching best path: ", error);
       // SET ERROR IN STATE TO SHOW USER AND RESET ALL DATA
+      // UPDATE APP STATE
+      appDispatcher({
+        type: APP_ACTION_TYPES.setMultiple,
+        object: {
+          loading: false,
+        }
+      });
     }
 
-  }, [state.endCords, state.startCords]);
+  }, [state.endCords, state.startCords, state.transportChosen]);
   
 
   // HANDLE SWITCH WAY OF TRANSPORT
@@ -233,7 +253,19 @@ const App = () => {
           stops: [startCords, endCords],
           endpoint: "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve",
           authentication: auth,
+          travelMode: JSON.stringify(TRAVEL_MODE_JSONS[state.transportChosen]),
         });
+
+         // BOUNDS
+        let bounds = new maplibregl.LngLatBounds();
+
+        // SET BOUNDS
+        for(let path of response.routes.features[0].geometry.paths[0]) {
+          bounds.extend(path);
+        }
+
+        // SET FIT BOUNDS
+        map.current.fitBounds(bounds, {padding: 300});
 
          // SET ROUTE SOURCE
         map.current.getSource("route").setData(response.routes.geoJson);
@@ -264,7 +296,7 @@ const App = () => {
 
 
 
-  }, []);
+  }, [state.transportChosen]);
 
   ////////////////////////
   // RENDER //////////////

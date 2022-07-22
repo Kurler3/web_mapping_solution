@@ -5,6 +5,8 @@
   --border-gray: #b5b5b5;
   /* BLUE BACKGROUND */
   --blue-bg: #3492eb;
+  /* LIGHT BLUE BG */
+  --light-blue: #66cbfa;
   /* ON HOVER ICON BTN BG */
   --hover-icon-btn-bg: #ebebeb;
   /* LIGHT GRAY BG */
@@ -26,12 +28,35 @@
 
 }
 
+/* BODY  */
 body {
   padding: 0px;
   margin: 0px;
   font-family: 'Fredoka', sans-serif;
   overflow: hidden;
 }
+
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--light-blue);
+  transition: var(--common-transition);
+  border-radius: 10px;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blue-bg);
+}
+/* END SCROLLBAR */
+
 
 /* ALL KEYFRAMES */
 
@@ -121,6 +146,8 @@ body {
   text-overflow: ellipsis;
 }
 
+/* END COMMON CSS */
+
 /* APP */
 .App {
   position: relative;
@@ -140,7 +167,7 @@ body {
 .map {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   height: 100%;
   width: 100%;
 }
