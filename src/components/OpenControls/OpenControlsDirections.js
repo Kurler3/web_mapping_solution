@@ -1,4 +1,5 @@
-import React, {memo} from 'react';
+import React, {memo, useMemo} from 'react';
+import { TRANSPORT_METHODS } from '../../utils/constants';
 import { secondsToHms } from '../../utils/functions';
 
 const OpenControlsDirections = ({
@@ -12,11 +13,20 @@ const OpenControlsDirections = ({
     loading,
     // UPDATE ROUTE
     updateRoute,
+    // TRANSPORT CHOSEN,
+    transportChosen,
 }) => {
-    console.log('calculatedRoute', calculatedRoute);
+   
+    // TOTAL TIME DURATION
+    const totalTime = useMemo(() => {
 
+        if(!calculatedRoute) return;
 
+        let timeKey = Object.values(TRANSPORT_METHODS).find((transport) => transport.id === transportChosen).totalTimeKey;
 
+        return secondsToHms(calculatedRoute.routes.features[0].attributes[timeKey] * 60)
+
+    }, [calculatedRoute, transportChosen]);
 
 
     ////////////////////////
@@ -96,7 +106,7 @@ const OpenControlsDirections = ({
                     <div className='flexCenterCenter openControlsDirectionsTimeContainer'>
 
                             {/* TOTAL TIME */}
-                            <span className="openControlsDirectionsTime">{secondsToHms(calculatedRoute.routes.features[0].attributes.Total_TravelTime * 60)}</span>
+                            <span className="openControlsDirectionsTime">{totalTime}</span>
 
                             {/* TOTAL KM */}
                             <span className="openControlsDirectionsDistance">

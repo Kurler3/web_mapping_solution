@@ -104,7 +104,9 @@ const App = () => {
         endpoint: 'https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?',
         // endpoint: `https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?travelMode=${JSON.stringify(TRAVEL_MODE_JSONS[state.transportChosen])}`,
         authentication: auth,
-        travelMode: TRAVEL_MODE_JSONS[state.transportChosen],
+        params: {
+          'travelMode': TRAVEL_MODE_JSONS[state.transportChosen],
+        },
       });
 
       // let response = await fetch(`https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?stops=${[state.startCords, state.endCords]}&travelMode=${JSON.stringify(TRAVEL_MODE_JSONS[state.transportChosen])}&f=geojson&token=1SNgVk35Rynt3hwkQkl1BahIrB-jjR19HWTnEWZFsgo2mTv5P0O4Ca8QBd6C8aqPoqMymFWuUdKO1agCzjbSXRde13HRe6R8pAaubahItYM2B4blaY29esvelKKGX44h`)
@@ -191,16 +193,16 @@ const App = () => {
 
 
     // HANDLE END MARKER
-    if(transportObject.id === "subway") {
+    if(transportObject.id === "bus") {
       // CHANGE TO SUBWAY MARKER
-      map.current.setLayoutProperty('end-layer', 'icon-image', 'subway-marker');
+      map.current.setLayoutProperty('end-layer', 'icon-image', 'bus-marker');
       // SET OTHER SIZE
-      map.current.setLayoutProperty('end-layer', 'icon-size', 1.3);
+      map.current.setLayoutProperty('end-layer', 'icon-size', 0.04);
 
       map.current.setPaintProperty('end-layer', 'icon-color', 'red');
     }
     // ELSE IF WAS SUBWAY PREVIOUS, CHANGE BACK TO PLACE-MARKER
-    else if(state.transportChosen === "subway") {
+    else if(state.transportChosen === "bus") {
       map.current.setLayoutProperty('end-layer', 'icon-image', 'place-marker');
       map.current.setLayoutProperty('end-layer', 'icon-size', 0.09);
     }

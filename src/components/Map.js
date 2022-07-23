@@ -3,8 +3,8 @@ import maplibregl from 'maplibre-gl';
 import mockResponse from '../response.json';
 import { APP_ACTION_TYPES, CLICK_MAP_STEP, EMPTY_MAP_SOURCE, TRANSPORT_METHODS } from '../utils/constants';
 
-// IMPORT SUBWAY IMAGE
-import subwayIcon from '../img/subway.png';
+// // IMPORT SUBWAY IMAGE
+// import subwayIcon from '../img/subway.png';
 
 
 // COMPONENT
@@ -99,11 +99,20 @@ const Map = ({
               }
         );
 
-        // LOAD SUBWAY
-        map.current.loadImage(subwayIcon, (error, image) => {
+        // // LOAD SUBWAY
+        // map.current.loadImage(subwayIcon, (error, image) => {
+        //   if(error) throw error;
+        //   map.current.addImage('subway-marker', image);
+        // })
+
+
+        // LOAD BUS SVG
+        map.current.loadImage('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Bus-logo.svg/1024px-Bus-logo.svg.png', (error, image) => {
           if(error) throw error;
-          map.current.addImage('subway-marker', image);
-        })
+
+          map.current.addImage('bus-marker', image);
+
+        });
 
       
       }, [map]);

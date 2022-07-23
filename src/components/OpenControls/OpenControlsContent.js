@@ -89,6 +89,7 @@ const OpenControlsContainer = ({
                 calculatedRoute={calculatedRoute}
                 loading={loading}
                 updateRoute={updateRoute}
+                transportChosen={transportChosen}
             />
 
         </div>
