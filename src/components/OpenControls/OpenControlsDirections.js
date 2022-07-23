@@ -20,8 +20,6 @@ const OpenControlsDirections = ({
     // HIGHLIGHTED STEP
     highlightedStep,
 }) => {
-
-    console.log("Route: ", highlightedStep);
    
     // TOTAL TIME DURATION
     const totalTime = useMemo(() => {
