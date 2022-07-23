@@ -1,0 +1,24 @@
+
+/* APP */
+/* .App {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background-color: transparent;
+  z-index: -1;
+} */
+
+
+/* MAP CONTAINER */
+.mapWrap {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+/* MAP */
+.map {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
