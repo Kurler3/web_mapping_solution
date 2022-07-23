@@ -27,6 +27,10 @@ const OpenControlsContainer = ({
     updateRoute,
     // HANDLE CHANGE TRANSPORT IN MAP LAYER STYLE
     handleChangeTransport,
+    // HANDLE SELECT STEP
+    handleSelectStep,
+    // HIGHLIGHTED STEP
+    highlightedStep,
 }) => {
 
 
@@ -35,17 +39,20 @@ const OpenControlsContainer = ({
 
         // IF NOT SAME THEN UPDATE
         if(transportChosen!==transportId) {
+           
+
+            // CHANGE MAP LAYER DATA ACCORDING TO THE TRANSPORT CHOSEN
+            handleChangeTransport(transportId);
+
+            // UPDATE STATE
             appDispatcher({
                 type: APP_ACTION_TYPES.setMultiple,
                 object: {
                     transportChosen: transportId,
                     calculatedRoute: null,
+                    highlightedStep: null,
                 }
             });
-
-
-            // CHANGE MAP LAYER DATA ACCORDING TO THE TRANSPORT CHOSEN
-            handleChangeTransport(transportId);
 
         }
 
@@ -90,6 +97,8 @@ const OpenControlsContainer = ({
                 loading={loading}
                 updateRoute={updateRoute}
                 transportChosen={transportChosen}
+                handleSelectStep={handleSelectStep}
+                highlightedStep={highlightedStep}
             />
 
         </div>

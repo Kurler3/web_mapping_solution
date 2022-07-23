@@ -28,6 +28,12 @@ const Controls = ({
     updateRoute,
     // HANDLE CHANGE TRANSPORT IN MAP LAYER STYLE
     handleChangeTransport,
+
+    // HANDLE SELECT STEP
+    handleSelectStep,
+
+    // HIGHLIGHTED STEP
+    highlightedStep,
 }) => {
 
 
@@ -57,7 +63,7 @@ const Controls = ({
                     {/* ICON */}
                     <span className="material-icons startChooseBtnIcon">hail</span>
 
-                    Click to choose a trajetory
+                    <span id="startChooseBtnText">Click to choose a trajetory</span>
 
 
                 </div>
@@ -75,6 +81,8 @@ const Controls = ({
                     loading={loading}
                     updateRoute={updateRoute}
                     handleChangeTransport={handleChangeTransport}
+                    handleSelectStep={handleSelectStep}
+                    highlightedStep={highlightedStep}
                 />
             }
             

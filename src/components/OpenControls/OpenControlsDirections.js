@@ -15,7 +15,13 @@ const OpenControlsDirections = ({
     updateRoute,
     // TRANSPORT CHOSEN,
     transportChosen,
+    // HANDLE SELECT STEP
+    handleSelectStep,
+    // HIGHLIGHTED STEP
+    highlightedStep,
 }) => {
+
+    console.log("Route: ", highlightedStep);
    
     // TOTAL TIME DURATION
     const totalTime = useMemo(() => {
@@ -123,10 +129,21 @@ const OpenControlsDirections = ({
 
                                 let timeFromLastStop = secondsToHms(f.attributes.time * 60);
 
+                                let isHighlighted = highlightedStep ? highlightedStep === index : false;
+
+                                let isLast = index === calculatedRoute.directions[0].features.length - 1;
+
                                 return (
                                     <div
                                         key={`open_controls_directions_${f.attributes.text}_${index}`}
-                                        className='openControlsDirectionsListItem flexColStartStart'  
+                                        className={`
+                                             flexColStartStart
+                                            ${isHighlighted ? "highlightedDirectionItem" :  !isLast && index!==0 ?"openControlsDirectionsListItem" : "firstLastControlsDirectionsListItem"}    
+                                        `}
+                                        onClick={() => !isLast && index!==0 ? handleSelectStep(index) : {}}
+                                        style={{
+                                            opacity: highlightedStep ? isHighlighted ? '1' : '0.5' : 1,
+                                        }}
                                     >
 
                                         <span className='openControlsDirectionsListItemText'>

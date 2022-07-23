@@ -195,9 +195,13 @@ body {
   animation-duration: 200ms;
   animation-iteration-count: 1;
 }
-
+@media only screen and (max-width: 600px) {
+  #startChooseBtnText {
+    display: none;
+  }
+}
 .startChooseBtn {
-  width: 300px;
+  width: 100%;
   padding: 10px;
   font-size: 18px;
   font-weight: 500;
@@ -224,9 +228,9 @@ body {
   animation-name: none;
 }
 .startChooseBtnIcon {
-  position: absolute;
-  left: 0;
-  padding: 10px;
+  /* position: absolute;
+  left: 0; */
+  padding: 5px;
 }
 
 
@@ -362,19 +366,32 @@ body {
   max-height: 570px;
   margin-top: 10px;
 }
-.openControlsDirectionsListItem {
+.openControlsDirectionsListItem, .highlightedDirectionItem, .firstLastControlsDirectionsListItem {
   width: 80%;
   border: 1px solid var(--border-gray);
   border-radius: 10px;
   margin-top: 15px;
   padding: 10px;
   box-shadow: var(--common-box-shadow);
+  cursor: pointer;
+  transition: var(--common-transition);
 
   /* OPACITY IN ANIMATION */
   animation-name: opacityIn;
   animation-timing-function: ease;
   animation-duration: 200ms;
   animation-iteration-count: 1;
+}
+.openControlsDirectionsListItem:hover {
+  background: var(--light-gray-bg);
+  transform: scale(1.05);
+}
+.highlightedDirectionItem {
+  background-color: var(--blue-bg);
+  color: white;
+}
+.highlightedDirectionItem > .openControlsDirectionsListItemTime {
+  color: var(--light-gray-bg);
 }
 .openControlsDirectionsListItemText {
   text-align: start;
@@ -385,12 +402,15 @@ body {
   color: var(--light-gray-txt);
   margin-top: 3px;
 }
+.firstLastControlsDirectionsListItem {
+  cursor: default;
+}
 
 /* MOCK ROUTING BTN */
 .mockRoutingBtn {
   position: absolute;
   z-index: 1000;
-  top: 20px;
+  top: 30px;
   right: 30px;
   padding: 15px;
   font-weight: 600;

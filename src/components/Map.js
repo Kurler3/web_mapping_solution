@@ -125,6 +125,12 @@ const Map = ({
         data: EMPTY_MAP_SOURCE,
       });
 
+      // ADD MAP STEP ROUTE SOURCE
+      map.current.addSource('step-route', {
+        type: 'geojson',
+        data: EMPTY_MAP_SOURCE,
+      });
+
       // ADDING VISUAL REPRESENTATION OF THE PATH (LINE/DOTS, DEPENDING ON THE TYPE OF TRANSPORTATION)
       map.current.addLayer({
         id: "route-line",
@@ -132,6 +138,17 @@ const Map = ({
         source: "route",
         // DEFAULT TRANSPORT WAY IS CAR
         paint: TRANSPORT_METHODS.Car.routeLinePaint,
+      });
+
+      // ADDING VISUAL REPRESENTATION OF STEP PATH
+      map.current.addLayer({
+        id: "step-route-line",
+        type: 'line',
+        source: 'step-route',
+        paint: {
+          'line-color': '#eb3a34',
+          'line-width': 10,
+        }
       });
 
     }, [map]);
@@ -172,6 +189,7 @@ const Map = ({
               currentStep: CLICK_MAP_STEP.end,
               isChoosing: true,
               calculatedRoute: null,
+              highlightedStep: null,
           };
           
       } else {
@@ -181,6 +199,7 @@ const Map = ({
           // IF ALREADY CALCULATED A ROUTE, THEN MAKE IT NULL
           if(calculatedRoute) {
             map.current.getSource("route").setData(EMPTY_MAP_SOURCE);
+            map.current.getSource('step-route').setData(EMPTY_MAP_SOURCE);
           }
 
           // UPDATE APP STATE
@@ -191,6 +210,7 @@ const Map = ({
               currentStep: CLICK_MAP_STEP.start,
               isChoosing: true,
               calculatedRoute: null,
+              highlightedStep: null,
             };
 
         }

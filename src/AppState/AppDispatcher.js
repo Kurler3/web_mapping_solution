@@ -19,6 +19,8 @@ export const initialState = {
     transportChosen: TRANSPORT_METHODS.Car.id,
     // CALCULATED ROUTE
     calculatedRoute: null,
+    // HIGHLIGHTED STEP
+    highlightedStep: null,
 };
 
 // EXPORT REDUCER

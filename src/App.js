@@ -33,6 +33,8 @@ const App = () => {
       map.current.getSource('end').setData(EMPTY_MAP_SOURCE);
       // EMPTY ROUTE SOURCE
       map.current.getSource('route').setData(EMPTY_MAP_SOURCE);
+      // EMPTY STEP ROUTE SOURCE
+      map.current.getSource('step-route').setData(EMPTY_MAP_SOURCE);
   }, []);
 
   // HANDLE RESET START/END POINT FROM OPEN CONTROLS BODY
@@ -56,13 +58,6 @@ const App = () => {
   // HANDLE SWITCH START AND END MAP DATA
   const handleSwitchMapData = useCallback(() => {
 
-    // let start = map.current.getSource('start');
-    // let end = map.current.getSource('end');
-
-    // start.setData(end._data);
-    // end.setData(start._data);
-
-  
     // SET START DATA
     map.current.getSource('start').setData({
       type: 'Point',
@@ -96,20 +91,15 @@ const App = () => {
       // AUTH FOR ArcGIS REST API
       let auth = ApiKeyManager.fromKey('AAPK65f73d9f93544540bed1ec91bce6bfb23iSWU4RgwFb79XWl9vAWtF6_R5vjmPhCtMzlrwvxFoCF4MwnK3cJ0WYirUHLnuXB');
 
-     
-
       // GET BEST PATH
       let response = await solveRoute({
         stops: [state.startCords, state.endCords],
         endpoint: 'https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?',
-        // endpoint: `https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?travelMode=${JSON.stringify(TRAVEL_MODE_JSONS[state.transportChosen])}`,
         authentication: auth,
         params: {
           'travelMode': TRAVEL_MODE_JSONS[state.transportChosen],
         },
       });
-
-      // let response = await fetch(`https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World/solve?stops=${[state.startCords, state.endCords]}&travelMode=${JSON.stringify(TRAVEL_MODE_JSONS[state.transportChosen])}&f=geojson&token=1SNgVk35Rynt3hwkQkl1BahIrB-jjR19HWTnEWZFsgo2mTv5P0O4Ca8QBd6C8aqPoqMymFWuUdKO1agCzjbSXRde13HRe6R8pAaubahItYM2B4blaY29esvelKKGX44h`)
 
       // BOUNDS
       let bounds = new maplibregl.LngLatBounds();
@@ -159,6 +149,9 @@ const App = () => {
     // MAKE ROUTE SOURCE EMPTY
     map.current.getSource('route').setData(EMPTY_MAP_SOURCE);
 
+    // EMPTY STEP ROUTE SOURCE
+    map.current.getSource('step-route').setData(EMPTY_MAP_SOURCE);
+
     // REMOVE ROUTE LAYER COMPLETLY BECAUSE CAN'T UPDATE ENTIRE PAINT PROPERTY ON IT
 
     // REMOVE
@@ -207,8 +200,22 @@ const App = () => {
       map.current.setLayoutProperty('end-layer', 'icon-size', 0.09);
     }
 
+    if(state.calculatedRoute) {
+       // BOUNDS
+      let bounds = new maplibregl.LngLatBounds();
 
-  }, [state.transportChosen]);
+      // SET BOUNDS
+      for(let path of state.calculatedRoute.routes.features[0].geometry.paths[0]) {
+        bounds.extend(path);
+      }
+
+      // SET FIT BOUNDS
+      map.current.fitBounds(bounds, {padding: 300});
+    }
+   
+
+
+  }, [state.calculatedRoute, state.transportChosen]);
 
   // HANDLE CLICK IN MOCK ROUTING BTN
   const handleClickMockRoutingBtn = useCallback(async () => {
@@ -278,6 +285,7 @@ const App = () => {
           object: {
             loading: false,
             calculatedRoute: response,
+            highlightedStep: null,
           }
         });
 
@@ -299,6 +307,70 @@ const App = () => {
 
 
   }, [state.transportChosen]);
+
+  // HANDLE SELECTING STEP IN DIRECTIONS LIST
+  const handleSelectStep = useCallback((indexStep) => {
+
+    let stepValue;
+
+    // IF SELECTED SAME STEP AS WAS SELECTED
+    if(state.highlightedStep && indexStep === state.highlightedStep) {
+
+      stepValue = null;
+
+      // SET STEP ROUTE SOURCE TO EMPTY
+      map.current.getSource('step-route').setData(EMPTY_MAP_SOURCE);
+
+      // MAKE MAP ZOOM BACK OUT
+
+      // BOUNDS
+      let bounds = new maplibregl.LngLatBounds();
+
+      // SET BOUNDS
+      for(let path of state.calculatedRoute.routes.features[0].geometry.paths[0]) {
+        bounds.extend(path);
+      }
+
+      // SET FIT BOUNDS
+      map.current.fitBounds(bounds, {padding: 300});
+
+    }
+    else if(state.calculatedRoute) {
+
+      // GET CORDS [ [long1, lat1], [long2, lat2] ]
+      let cords = state.calculatedRoute.directions[0].features[indexStep].geometry.paths[0];
+
+      // SET STEP VALUE FOR DISPATCHER
+      stepValue = indexStep;
+      
+      // SET STEP ROUTE SOURCE CORDS
+      map.current.getSource('step-route').setData({
+        type: 'LineString',
+        coordinates: cords,
+      });
+
+      // BOUNDS
+      let bounds = new maplibregl.LngLatBounds();
+
+      // SET BOUNDS
+      for(let path of cords) {
+        bounds.extend(path);
+      }
+
+      // SET FIT BOUNDS
+      map.current.fitBounds(bounds, {padding: 300});
+
+    }
+
+    // UPDATE STATE
+    appDispatcher({
+      type: APP_ACTION_TYPES.setKey,
+      key: 'highlightedStep',
+      value: stepValue,
+    });
+
+
+  }, [state.calculatedRoute, state.highlightedStep]);
 
   ////////////////////////
   // RENDER //////////////
@@ -327,6 +399,8 @@ const App = () => {
           loading={state.loading}
           updateRoute={updateRoute}
           handleChangeTransport={handleChangeTransport}
+          handleSelectStep={handleSelectStep}
+          highlightedStep={state.highlightedStep}
         />
 
         {/* MAP LIBRE MAP */}
