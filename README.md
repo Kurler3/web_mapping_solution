@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# Huawei Challenge Web Mapping Solution
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Usage
 
-In the project directory, you can run:
+### Intro
 
-### `npm start`
+When entering starting the app, 2 buttons and a map is displayed. To **search for a path**, the user can either click in the map directly, or he can click in the top-left button to open up the **controls container**.
+If the user clicks in the map while the controls container is closed, it will open automatically. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The logic for selecting the source (starting) and destination (ending) points is: 
+    - First time clicking in map sets the **starting point**.
+    - Second time clicking in map sets the **ending point**.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Calculating the route
 
-### `npm test`
+After having both **starting** and **ending** points selected, the user can then click on the button that says **Calculate Route** to get the best route path for the transport method chosen with the icons above.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+At any time, the user can reset the **starting** or **ending** points by clicking in the respective box in the controls container.
 
-### `npm run build`
+### Highlighting steps
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+After having the route calculated, the user will get a list of steps for that route. Each of these steps (excluding the first and the last) can be highlighed by clicking on them. When a step is highlighted, the map zooms in/out and flys to where that piece of the path is.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Using the mock routing response
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+There's one button on the top-right side of the screen that uses the coordinates given in the response.json file to calculate a route.
 
-### `npm run eject`
+## Tools used
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+ - [Maplibre](https://maplibre.org/) Map library.
+ - [ArcGis](https://www.arcgis.com/) Cloud-based mapping solution (I used the routing services).
+ - [React](https://reactjs.org/) Javascript framework.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Instalation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+When running this app from your local, please run **npm install** first, since I am using some libraries from ArcGis and also React.js.
