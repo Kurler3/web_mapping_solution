@@ -1,4 +1,4 @@
-# Huawei Challenge Web Mapping Solution
+# Mapping Solution
 
 
 ## Usage
